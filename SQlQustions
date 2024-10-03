@@ -1,0 +1,20 @@
+--before 12c to create any id that should be auto generated
+CREATE SEQUENCE idgen_seq
+  START WITH 1   -- Start with 1
+  INCREMENT BY 1 -- Increment by 1 for each new row
+  NOCACHE;       -- Optional: Don't cache values for sequential order
+/
+create table idgen(id number ,name varchar2(10))
+
+/
+CREATE OR REPLACE TRIGGER my_table_before_insert
+BEFORE INSERT ON idgen
+FOR EACH ROW
+BEGIN
+  -- Assign the next value from the sequence to the ID column before inserting the row
+  :NEW.id := idgen_seq.NEXTVAL;
+END;
+/
+
+insert into idgen (name) values('Deepak')
+select * from idgen
