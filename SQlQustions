@@ -18,3 +18,10 @@ END;
 
 insert into idgen (name) values('Deepak')
 select * from idgen
+===========================
+To put comment on any table
+--comment on table entries is 'Its store personal details'
+SELECT table_name, comments 
+FROM user_tab_comments 
+WHERE table_name = 'ENTRIES';
+
