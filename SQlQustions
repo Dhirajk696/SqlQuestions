@@ -24,4 +24,39 @@ To put comment on any table
 SELECT table_name, comments 
 FROM user_tab_comments 
 WHERE table_name = 'ENTRIES';
+================
+--To check from hard code values which values is not insert from list or excel in that table
+create table tabAA  (id number)
+insert into tabaa values(10)
+select * from tabaa
+/
+SELECT column_value AS hardcoded_value
+FROM TABLE(SYS.ODCINUMBERLIST(2, 4, 6, 8, 10, 12))
+MINUS
+SELECT id
+FROM tabaa
+/
+INSERT INTO tabaa (id)
+SELECT column_value AS hardcoded_value
+FROM TABLE(SYS.ODCINUMBERLIST(2, 4, 6, 8, 10, 12))
+MINUS
+SELECT id
+FROM tabaa;
+========================
+SELECT value
+FROM (SELECT 2 AS value FROM dual
+      UNION ALL
+      SELECT 4 FROM dual
+      UNION ALL
+      SELECT 6 FROM dual
+      UNION ALL
+      SELECT 8 FROM dual
+      UNION ALL
+      SELECT 10 FROM dual
+      UNION ALL
+      SELECT 12 FROM dual
+      union all
+      SELECT 16 FROM dual) hardcoded_values
+WHERE value NOT IN (SELECT id FROM tabaa);
+ 
 
