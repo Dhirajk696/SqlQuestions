@@ -58,5 +58,58 @@ FROM (SELECT 2 AS value FROM dual
       union all
       SELECT 16 FROM dual) hardcoded_values
 WHERE value NOT IN (SELECT id FROM tabaa);
+====================================
+Create auomated job in sql using procedure
+create table etl_job as select * from ereg where 1=2
+select * from etl_job
+/
+create or replace procedure etl_trn_jobs
+as
+begin
+insert into etl_job (ename,empno,job,sal)
+select ename,empno,job,sal+5000 from ereg  
+
+commit;
+DBMS_OUTPUT.PUT_LINE('ETL process completed successfully!');
+END etl_trn_jobs;
+/
+BEGIN
+   DBMS_SCHEDULER.create_job (
+      job_name        => 'etl_five_minute_job',
+      job_type        => 'PLSQL_BLOCK',
+      job_action      => 'BEGIN etl_trn_jobs; END;',
+      start_date      => SYSTIMESTAMP,  -- Start immediately
+      repeat_interval => 'FREQ=MINUTELY; INTERVAL=5',  -- Repeat every 5 minutes
+      enabled         => TRUE
+   );
+END;
+/
+GRANT CREATE JOB TO IMMS;
+
+/
+SELECT job_name, status, log_date, additional_info 
+FROM dba_scheduler_job_log
+WHERE job_name = 'etl_five_minute_job';
+/
+select * from etl_job
+select * from ereg where sal>
+/
+SELECT job_name, enabled
+FROM dba_scheduler_jobs
+WHERE job_name = 'ETL_FIVE_MINUTE_JOB';
+/
+SELECT job_name, status, error#, actual_start_date, log_date
+FROM dba_scheduler_job_run_details
+WHERE job_name = 'ETL_FIVE_MINUTE_JOB';
+/
+--To drop job
+BEGIN
+   DBMS_SCHEDULER.drop_job('etl_five_minute_job');
+END;
+/
+
+
+
+
  
 
